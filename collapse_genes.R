@@ -5,7 +5,7 @@ library(Matrix)
 
 collapse_genes <- function(mat) {
     
-    t2g <- read.table(file = "/Users/fabiopohl/references/geneid_genename.csv",
+    t2g <- read.table(file = "/data/proj/GCB_FBP/references/geneid_genename.csv",
                       sep = ",", header = TRUE, stringsAsFactors = FALSE)
     genes <- rownames(mat)
     genes_keep <- intersect(genes, t2g$Gene.stable.ID.version)
