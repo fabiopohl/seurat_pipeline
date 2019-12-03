@@ -12,6 +12,10 @@ seurat_create_normalise <- function(mat, limit, cutoff, sample_name, regress = N
     mat_noempty <- mat[, which(e.out$FDR <= cutoff)]
     colnames(mat_noempty) <- paste0(sample_name, colnames(mat_noempty))
     
+    # Filter cells with low total counts
+    ntotal <- colSums(mat_noempty)
+    mat_nolow <- mat_noempty[, which(ntotal > 300)]
+
     # Create Seurat Object
     seurat <- CreateSeuratObject(counts = mat_noempty, project = sample_name, min.cells = 3, min.features = 200)
     seurat[["percent.mt"]] <- PercentageFeatureSet(seurat, pattern = "^MT-")
