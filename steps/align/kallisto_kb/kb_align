@@ -1,0 +1,40 @@
+# Import environment variables
+getenv       = true
+
+# Full path to the program, without any arguments
+executable   = /home/fabio/anaconda3/bin/kb 
+
+# Arguments (see below for syntax)
+arguments    = "count -i /data/proj/GCB_FBP/kb/linnarson/index.idx \
+-w /data/proj/GCB_FBP/references/whitelist/10xv3_whitelist.txt \
+-m 40G \
+-o /data/proj/GCB_FBP/czi_kb_lidx_191108/output_$(sample)/ -t 56 \
+-g /data/proj/GCB_FBP/kb/linnarson/transcripts_to_genes.txt -x 0,0,16:0,16,27:1,0,0 \
+-c1 /data/proj/GCB_FBP/kb/linnarson/cdna_transcripts_to_capture.txt \
+-c2 /data/proj/GCB_FBP/kb/linnarson/intron_transcripts_to_capture.txt --nucleus --loom \
+$(dir)$(sample)_L001_R1_001.fastq.gz \
+$(dir)$(sample)_L001_R2_001.fastq.gz \  
+$(dir)$(sample)_L002_R1_001.fastq.gz \
+$(dir)$(sample)_L002_R2_001.fastq.gz" 
+
+
+# Initial directory
+initialdir = /data/proj/GCB_FBP/rawdata_czi/
+
+# Log file
+log          = /home/fabio/jobs/czi_kb_lidx/kb_$(sample).log
+
+# stdout
+output       = /home/fabio/jobs/czi_kb_lidx/kb_$(sample).out
+
+# stderr
+error        = /home/fabio/jobs/czi_kb_lidx/kb_$(sample).error
+
+# Resource request (see below)
+request_cpus = 56
+
+# IO limit
+concurrency_limits = FSDATA:50
+
+# Queue the job
+queue dir,sample from /home/fabio/condor/czi/fetal_dirs.txt 

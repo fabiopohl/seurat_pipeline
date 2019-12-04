@@ -1,0 +1,4 @@
+kallisto bus -i /data/proj/GCB_FBP/references/index/kb/linnarson/index.idx -o /data/proj/GCB_FBP/repos/seurat_pipeline/steps/align/kallisto_kb/test/ -x 0,0,16:0,16,27:1,0,0 -t 56 sample_r1.fastq sample_r2.fastq
+
+
+/home/fabio/anaconda3/bin/kb count -i /data/proj/GCB_FBP/references/index/kb/linnarson/index.idx -w /data/proj/GCB_FBP/references/whitelist/10xv3_whitelist.txt -m 40G -t 1 -o /data/proj/GCB_FBP/repos/seurat_pipeline/steps/align/kallisto_kb/test/ -g /data/proj/GCB_FBP/references/index/kb/linnarson/transcripts_to_genes.txt -x 0,0,16:0,16,27:1,0,0 -c1 /data/proj/GCB_FBP/references/index/kb/linnarson/cdna_transcripts_to_capture.txt -c2 /data/proj/GCB_FBP/references/index/kb/linnarson/intron_transcripts_to_capture.txt --lamanno ./sample_r1.fastq ./sample_r2.fastq

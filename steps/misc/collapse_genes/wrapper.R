@@ -1,12 +1,15 @@
-# Function to collapse genes ID to genes symbol - select highest expressed transcript
-
+#' Collapse genes ID to genes symbol - select highest expressed transcript
+#'
+#' @param mat Full path to sparse matrix R Object
+#' @param id_name Full path to CSV file with Gene ID mapping to Gene symbols
+#' @return Collapsed matrix
 library(dplyr)
 library(Matrix)
 
-collapse_genes <- function(mat) {
+collapse_genes <- function(mat, id_name) {
     
-    t2g <- read.table(file = "/data/proj/GCB_FBP/references/geneid_genename.csv",
-                      sep = ",", header = TRUE, stringsAsFactors = FALSE)
+    t2g <- read.table(file = id_name, sep = ",",
+                      header = TRUE, stringsAsFactors = FALSE)
     genes <- rownames(mat)
     genes_keep <- intersect(genes, t2g$Gene.stable.ID.version)
     t2g_keep <- filter(t2g, Gene.stable.ID.version %in% genes_keep, !duplicated(Gene.stable.ID.version))
@@ -26,6 +29,9 @@ collapse_genes <- function(mat) {
     return(mat_final)
 
 }
+
+# Get parameters
+mat_path <- snakemake@input[[mat]]
 
 # Test
 #genes <- read.table(file = "/Users/fabiopohl/proj/czi/data/czi_kb_lidx_191108/output_11723WAPool01-S__18_13782/counts_unfiltered/unspliced.genes.txt", stringsAsFactors = FALSE)

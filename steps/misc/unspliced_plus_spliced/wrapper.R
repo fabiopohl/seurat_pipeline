@@ -1,6 +1,9 @@
-# Function to merge unspliced and spliced matrix from Kallisto
+#' Merge unspliced and spliced matrix from Kallisto KB output
+#'
+#' @param sample_path Full path to sample
+#' @param save_mat Save matrix (Default = TRUE)
+#' @return Named sparse matrix
 library(Matrix)
-
 unspliced_plus_spliced <- function(sample_path, save_mat = TRUE) {
     # Read data
     # Unspliced
@@ -42,3 +45,6 @@ unspliced_plus_spliced <- function(sample_path, save_mat = TRUE) {
     mat_sum <- t(mat_sum)
     return(mat_sum)
 }
+
+# Get parameters
+sample_path <- snakemake@input[["sample"]]
