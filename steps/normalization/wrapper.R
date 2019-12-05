@@ -47,7 +47,7 @@ if (vars_regress == "NULL") {
 seurat <- SCTransform(seurat, vars.to.regress = vars_regress)
 
 # Get output
-output <- snakemake@output
+output <- snakemake@output[[1]]
 
 # Save Seurat obj
 save(file = output, seurat)
