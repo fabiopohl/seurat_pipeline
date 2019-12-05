@@ -5,6 +5,7 @@
 # Big files
 **.bus
 **.fastq
+**.Rdata
 
 # Big tables
 **barcodes.txt
