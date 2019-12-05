@@ -1,0 +1,10 @@
+# Big matrixs
+**.mtx
+**matrix.ec
+
+# Big tables
+**barcodes.txt
+**genes.txt
+
+# Snakemake
+**.snakemake*

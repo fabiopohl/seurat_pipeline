@@ -1,0 +1,12 @@
+rule collapse_genes:
+    input:
+        mat = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/collapse_genes/test/unspliced_spliced.mtx",
+        barcodes = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/collapse_genes/test/unspliced_spliced.barcodes.txt",
+        genes = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/collapse_genes/test/unspliced_spliced.genes.txt"
+    params:
+        id_to_genes = "/data/proj/GCB_FBP/references/geneid_genename.csv"
+    output:
+        mat_output = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/collapse_genes/test/unspliced_spliced_collapsed.mtx",
+        barcodes_output = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/collapse_genes/test/unspliced_spliced_collapsed.barcodes.txt",
+        genes_output = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/collapse_genes/test/unspliced_spliced_collapsed.genes.txt"
+    wrapper: "file://.."

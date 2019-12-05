@@ -1,0 +1,13 @@
+rule unspliced_plus_spliced:
+    input:
+        mat_spliced = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/spliced.mtx",
+        barcodes_spliced = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/spliced.barcodes.txt",
+        genes_spliced = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/spliced.genes.txt",
+        mat_unspliced = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/unspliced.mtx",
+        barcodes_unspliced = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/unspliced.barcodes.txt",
+        genes_unspliced = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/unspliced.genes.txt"
+    output:
+        mat_output = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/unspliced_spliced.mtx",
+        barcodes_output = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/unspliced_spliced.barcodes.txt",
+        genes_output = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/misc/unspliced_plus_spliced/test/unspliced_spliced.genes.txt"
+    wrapper: "file://.."

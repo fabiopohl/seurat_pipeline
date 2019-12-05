@@ -1,25 +1,27 @@
 #' Merge unspliced and spliced matrix from Kallisto KB output
 #'
-#' @param sample_path Full path to sample
-#' @param save_mat Save matrix (Default = TRUE)
-#' @return Named sparse matrix
+#' @param mat_spliced Full path to spliced matrix from KB
+#' @param barcodes_spliced Full path to spliced barcodes table
+#' @param genes_spliced Full path to spliced genes table
+#' @param mat_unspliced Full path to unspliced matrix from KB
+#' @param barcodes_unspliced Full path to unspliced barcodes table
+#' @param genes_unspliced Full path to unspliced genes table
+#' @return Unspliced + spliced matrix
 library(Matrix)
-unspliced_plus_spliced <- function(sample_path, save_mat = TRUE) {
-    # Read data
+unspliced_plus_spliced <- function(mat_spliced, barcodes_spliced, genes_spliced,
+                                   mat_unspliced, barcodes_unspliced, genes_unspliced,
+                                   mat_output, barcodes_output, genes_output) {
+
     # Unspliced
-    genes_unspliced <- read.table(file = paste0(sample_path, "counts_unfiltered/unspliced.genes.txt"),
-                                  header = FALSE, stringsAsFactors = FALSE)
-    barcodes_unspliced <- read.table(file = paste0(sample_path, "counts_unfiltered/unspliced.barcodes.txt"),
-                                     header = FALSE, stringsAsFactors = FALSE)
-    mat_unspliced <- readMM(paste0(sample_path, "counts_unfiltered/unspliced.mtx"))
+    genes_unspliced <- read.table(file = genes_unspliced, header = FALSE, stringsAsFactors = FALSE)
+    barcodes_unspliced <- read.table(file = barcodes_unspliced, header = FALSE, stringsAsFactors = FALSE)
+    mat_unspliced <- readMM(mat_unspliced)
     rownames(mat_unspliced) <- barcodes_unspliced[[1]]
     
     # Spliced
-    genes_spliced <- read.table(file = paste0(sample_path, "counts_unfiltered/spliced.genes.txt"),
-                                              header = FALSE, stringsAsFactors = FALSE)
-    barcodes_spliced <- read.table(file = paste0(sample_path, "counts_unfiltered/spliced.barcodes.txt"),
-                                   header = FALSE, stringsAsFactors = FALSE)
-    mat_spliced <- readMM(paste0(sample_path, "counts_unfiltered/spliced.mtx"))
+    genes_spliced <- read.table(file = genes_spliced, header = FALSE, stringsAsFactors = FALSE)
+    barcodes_spliced <- read.table(file = barcodes_spliced, header = FALSE, stringsAsFactors = FALSE)
+    mat_spliced <- readMM(mat_spliced)
     rownames(mat_spliced) <- barcodes_spliced[[1]]
     
     # Intersect by barcodes
@@ -32,19 +34,25 @@ unspliced_plus_spliced <- function(sample_path, save_mat = TRUE) {
     rownames(mat_sum) <- NULL
     
     # Save matrix and new barcode table
-    if (save_mat == TRUE) {
-
-        writeMM(file = paste0(sample_path, "counts_unfiltered/spliced_unspliced.mtx"), mat_sum)
-        write.table(file = paste0(sample_path, "counts_unfiltered/spliced_unspliced_barcodes.txt"), data.frame(barcodes_common))
-        write.table(file = paste0(sample_path, "counts_unfiltered/spliced_unspliced_genes.txt"), genes_unspliced)
-
-    }
-
-    rownames(mat_sum) <- barcodes_common
-    colnames(mat_sum) <- genes_unspliced[[1]]
-    mat_sum <- t(mat_sum)
-    return(mat_sum)
+    writeMM(file = mat_output, mat_sum)
+    write.table(file = barcodes_output, data.frame(barcodes_common))
+    write.table(file = genes_output, genes_unspliced)
 }
 
 # Get parameters
-sample_path <- snakemake@input[["sample"]]
+mat_spliced <- snakemake@input[["mat_spliced"]]
+barcodes_spliced <- snakemake@input[["barcodes_spliced"]]
+genes_spliced <- snakemake@input[["genes_spliced"]]
+
+mat_unspliced <- snakemake@input[["mat_unspliced"]]
+barcodes_unspliced <- snakemake@input[["barcodes_unspliced"]]
+genes_unspliced <- snakemake@input[["genes_unspliced"]]
+
+mat_output <- snakemake@output[["mat_output"]]
+barcodes_output <- snakemake@output[["barcodes_output"]]
+genes_output <- snakemake@output[["genes_output"]]
+
+# Run function
+unspliced_plus_spliced(mat_spliced, barcodes_spliced, genes_spliced,
+                       mat_unspliced, barcodes_unspliced, genes_unspliced,
+                       mat_output, barcodes_output, genes_output)
