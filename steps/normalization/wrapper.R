@@ -1,30 +1,53 @@
-# Function to remove empty cells (EmptyDrops) and normalise data (SCTransform)
-library(Seurat)
-library(DropletUtils)
+#' Filter low quality cells and normalise data (SCTransform)
+#'
+#' @param mat Sparse matrix
+#' @param genes Genes table
+#' @param barcodes Barcodes table
+#' @return Seurat R object
+suppressMessages(library(Seurat))
+suppressMessages(library(Matrix))
 
-seurat_create_normalise <- function(mat, limit, cutoff, sample_name, regress = NULL) {
-    
-    # Remove empty droplets
-    e.out <- emptyDrops(mat, lower = limit)
-    #summary(e.out$FDR <= cutoff)
-    
-    # Filter empty droplets
-    mat_noempty <- mat[, which(e.out$FDR <= cutoff)]
-    colnames(mat_noempty) <- paste0(sample_name, colnames(mat_noempty))
-    
-    # Filter cells with low total counts
-    ntotal <- colSums(mat_noempty)
-    mat_nolow <- mat_noempty[, which(ntotal > 300)]
+# Get input
+mat_file <- snakemake@input[["mat"]]
+genes_file <- snakemake@input[["genes"]]
+barcodes_file <- snakemake@input[["barcodes"]]
 
-    # Create Seurat Object
-    seurat <- CreateSeuratObject(counts = mat_noempty, project = sample_name, min.cells = 3, min.features = 200)
-    seurat[["percent.mt"]] <- PercentageFeatureSet(seurat, pattern = "^MT-")
-    
-    # Filter low quality cells
-    seurat <- subset(seurat, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 5 & nCount_RNA > 300)
-    
-    # Normalise and scale data
-    seurat <- SCTransform(seurat, vars.to.regress = regress)
-    return(seurat)
+# Get params
+min_features <- snakemake@params[["min_features"]]
+max_features <- snakemake@params[["max_features"]]
+pct_mt <- snakemake@params[["pct_mt"]]
+min_total <- snakemake@params[["min_total"]]
+vars_regress <- snakemake@params[["vars_regress"]]
 
+# Load data
+mat <- readMM(mat_file)
+genes <- read.table(file = genes_file, stringsAsFactors = FALSE)
+barcodes <- read.table(file = barcodes_file, stringsAsFactors = FALSE)
+
+# Adjust matrix
+mat <- t(mat)
+colnames(mat) <- barcodes[[1]]
+rownames(mat) <- genes[[1]]
+
+# Filter low total reads barcodes
+ntotal <- colSums(mat)
+mat_fil <- mat[, which(ntotal > min_total)]
+
+# Create Seurat Object
+seurat <- CreateSeuratObject(counts = mat_fil, min.cells = 3, min.features = 200)
+seurat[["percent.mt"]] <- PercentageFeatureSet(seurat, pattern = "^MT-")
+
+# Filter low quality cells
+seurat <- subset(seurat, subset = nFeature_RNA > min_features & nFeature_RNA < max_features & percent.mt < pct_mt)
+
+# Normalise and scale data
+if (vars_regress == "NULL") {
+    vars_regress <- NULL
 }
+seurat <- SCTransform(seurat, vars.to.regress = vars_regress)
+
+# Get output
+output <- snakemake@output
+
+# Save Seurat obj
+save(file = output, seurat)

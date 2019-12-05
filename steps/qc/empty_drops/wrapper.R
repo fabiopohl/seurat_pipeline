@@ -6,8 +6,8 @@
 #' @param limit Total number of reads to consider empty cell (Recommended: 100)
 #' @param cutoff FDR cutoff for defining empty cell
 #' @return Filtered matrix
-library(DropletUtils)
-library(Matrix)
+suppressMessages(library(DropletUtils))
+suppressMessages(library(Matrix))
 
 filter_cells <- function(mat, limit, cutoff){
 
@@ -35,7 +35,7 @@ matr <- readMM(mat_file)
 barcodes <- read.table(file = barcodes_file, stringsAsFactors = FALSE)
 genes <- read.table(file = genes_file, stringsAsFactors = FALSE)
 
-#matr <- t(matr)
+matr <- t(matr)
 colnames(matr) <- barcodes[[1]]
 rownames(matr) <- genes[[1]]
 
@@ -53,6 +53,7 @@ write.table(file = genes_output, data.frame(rownames(mat_filt)))
 
 colnames(mat_filt) <- NULL
 rownames(mat_filt) <- NULL
+mat_filt <- t(mat_filt)
 writeMM(file = mat_output, mat_filt)
 
 # Testing

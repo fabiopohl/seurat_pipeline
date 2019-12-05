@@ -5,8 +5,8 @@
 #' @param genes Full path to genes table
 #' @param id_to_genes Full path to CSV file with Gene ID mapping to Gene symbols
 #' @return Collapsed matrix
-library(dplyr)
-library(Matrix)
+suppressMessages(library(dplyr))
+suppressMessages(library(Matrix))
 
 # Get input
 mat_file <- snakemake@input[["mat"]]
@@ -57,6 +57,7 @@ write.table(file = barcodes_output, data.frame(colnames(mat_final)))
 
 colnames(mat_final) <- NULL
 rownames(mat_final) <- NULL
+mat_final <- t(mat_final)
 writeMM(file = mat_output, mat_final)
 
 # Test
