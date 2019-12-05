@@ -2,9 +2,14 @@
 **.mtx
 **matrix.ec
 
+# Big files
+**.bus
+
 # Big tables
 **barcodes.txt
 **genes.txt
 
 # Snakemake
 **.snakemake*
+
+
