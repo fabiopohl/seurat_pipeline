@@ -9,7 +9,10 @@
 **barcodes.txt
 **genes.txt
 
+# Other outputs
+**.json
+**transcripts.txt
+
 # Snakemake
 **.snakemake*
-
 
