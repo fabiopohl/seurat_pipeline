@@ -50,4 +50,4 @@ seurat <- SCTransform(seurat, vars.to.regress = vars_regress)
 output <- snakemake@output[[1]]
 
 # Save Seurat obj
-save(file = output, seurat)
+saveRDS(file = output, seurat)
