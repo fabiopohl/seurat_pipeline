@@ -1,0 +1,60 @@
+Gene ,CellType
+ALDH1L1,Astrocyte
+AQP4,Astrocyte
+BMPR1B,Astrocyte
+CD44,Astrocyte
+GFAP,Astrocyte
+GLUL,Astrocyte
+HGF,Astrocyte
+PTX3,Astrocyte
+S100B,Astrocyte
+SLC1A2,Astrocyte
+SOX9,Astrocyte
+TNC,Astrocyte
+CDH5,Endothelial
+TEK,Endothelial
+VWF,Endothelial
+CD36,Microglia
+CD68,Microglia
+ITGAM,Microglia
+CLDN11,Myelinating Oligodendrocyte
+GALC,Myelinating Oligodendrocyte
+MAG,Myelinating Oligodendrocyte
+MAL,Myelinating Oligodendrocyte
+MBP,Myelinating Oligodendrocyte
+MOBP,Myelinating Oligodendrocyte
+MOG,Myelinating Oligodendrocyte
+MYRF,Myelinating Oligodendrocyte
+NKX6-2,Myelinating Oligodendrocyte
+OMG,Myelinating Oligodendrocyte
+PLP1,Myelinating Oligodendrocyte
+ASCL1,Neural Progenitor
+DCX,Neural Progenitor
+SOX1,Neural Progenitor
+FUT4,Neural Stem Cell
+HES1,Neural Stem Cell
+HES5,Neural Stem Cell
+MSI1,Neural Stem Cell
+NES,Neural Stem Cell
+SOX2,Neural Stem Cell
+ELAVL3,Neuron
+ELAVL4,Neuron
+NEFH,Neuron
+NEFL,Neuron
+NEFM,Neuron
+NEUROD6,Neuron
+SNAP25,Neuron
+TUBA1A,Neuron
+TUBB3,Neuron
+CNP,Oligodendrocyte Progenitor
+GPR17,Oligodendrocyte Progenitor
+NKX2-2,Oligodendrocyte Progenitor
+OLIG1,Oligodendrocyte Progenitor
+OLIG2,Oligodendrocyte Progenitor
+SOX10,Oligodendrocyte Progenitor
+CSPG4,Oligodendrocyte Progenitor
+PDGFRA,Oligodendrocyte Progenitor
+ST8SIA1,Oligodendrocyte Progenitor
+FABP7,Radial Glia
+SLC1A3,Radial Glia
+DES,Smooth Muscle
