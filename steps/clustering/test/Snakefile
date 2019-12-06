@@ -1,0 +1,4 @@
+rule cluster:
+    input: "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/clustering/test/seurat_obj_red.rds"
+    output: "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/clustering/test/seurat_obj_red_cluster.rds"
+    wrapper: "file://.."
