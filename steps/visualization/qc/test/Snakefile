@@ -1,0 +1,9 @@
+rule qc_plots:
+    input:
+        mat = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/qc/test/unspliced_spliced_collapsed.mtx",
+        genes = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/qc/test/unspliced_spliced_collapsed.genes.txt"
+    output:
+        vln = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/qc/test/vln_plot.eps",
+        scatter = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/qc/test/scatter_plot.eps",
+        knee = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/qc/test/knee_plot.eps"
+    wrapper: "file://.."
