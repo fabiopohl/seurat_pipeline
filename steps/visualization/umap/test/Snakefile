@@ -1,0 +1,7 @@
+rule umap:
+    input: 
+        seurat = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/umap/test/seurat_obj_red_cluster.rds"
+    output: 
+        umap = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/umap/test/2d_umap.eps",
+        html = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/umap/test/3d_umap.html"
+    wrapper: "file://.."
