@@ -1,0 +1,6 @@
+rule pc_selection:
+    input: seurat = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/pc_selection/test/seurat_obj_red.rds"
+    output:
+        jackstraw = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/pc_selection/test/jackstraw.eps",
+        elbow = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/pc_selection/test/elbow.eps"
+    wrapper: "file://.."
