@@ -1,0 +1,9 @@
+rule feature_plot:
+    input:
+        seurat = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/expression/test/seurat_obj_red_cluster.rds"
+    params: 
+        feat = "PTPRZ1"
+    output: 
+        umap = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/expression/test/umap.eps",
+        html = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/expression/test/umap.html"
+    wrapper: "file://.."
