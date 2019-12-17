@@ -32,8 +32,8 @@ seurat_markers_output <- snakemake@output[["seurat_output"]]
 known_markers <- snakemake@output[["known_markers"]]
 
 # Save output
-write.table(file = seurat_markers_output, seurat_markers)
-write.table(file = known_markers, cell_dt)
+write.table(file = seurat_markers_output, seurat_markers, row.names = FALSE)
+write.table(file = known_markers, cell_dt, row.names = FALSE)
 
 # Testing
 #seurat_file <- "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/findmarkers/test/seurat_obj_red_cluster.rds"

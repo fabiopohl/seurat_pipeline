@@ -1,0 +1,139 @@
+from snakemake.utils import validate, min_version
+from box import Box
+
+configfile: "config.yaml"
+config = Box(config)
+
+samples = config.samples
+#samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
+
+rule all:
+    input: 
+        align = expand("intermediate/{sample}/kallisto/counts_unfiltered/spliced.mtx", sample=samples),
+        cluster = expand("results/{sample}/seurat_obj_red_cluster.rds", sample=samples),
+        known_markers = expand("results/{sample}/known_markers.txt", sample=samples),
+        umap = expand("results/{sample}/umap.eps", sample=samples),
+        jackstraw = expand("results/{sample}/jackstraw.eps", sample=samples),
+        vln = expand("results/{sample}/vln_plot.eps", sample=samples)
+
+rule create_dir:
+    # Create directories for analysis
+    output: "raw", "intermediate", "results"
+    shell: "mkdir {output}"
+
+rule kallisto_kb:
+    input:
+        r1 = "{sample}_r1.fastq",
+        r2 = "{sample}_r2.fastq"
+    params:
+        reference = "/data/proj/GCB_FBP/references/index/kb/linnarson/index.idx",
+        t2g = "/data/proj/GCB_FBP/references/index/kb/linnarson/transcripts_to_genes.txt",
+        c1 = "/data/proj/GCB_FBP/references/index/kb/linnarson/cdna_transcripts_to_capture.txt",
+        c2 = "/data/proj/GCB_FBP/references/index/kb/linnarson/intron_transcripts_to_capture.txt",
+        whitelist = "/data/proj/GCB_FBP/references/whitelist/10xv3_whitelist.txt",
+        barcode_version = "0,0,16:0,16,27:1,0,0",
+        output_folder = "intermediate/{sample}/kallisto/"
+    output: 
+        spliced = "intermediate/{sample}/kallisto/counts_unfiltered/spliced.mtx",
+        unspliced = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced.mtx"
+    wrapper: "file://../../steps/align/kallisto_kb/"
+
+rule unspliced_plus_spliced:
+    input:
+        mat_spliced = "intermediate/{sample}/kallisto/counts_unfiltered/spliced.mtx",
+        barcodes_spliced = "intermediate/{sample}/kallisto/counts_unfiltered/spliced.barcodes.txt",
+        genes_spliced = "intermediate/{sample}/kallisto/counts_unfiltered/spliced.genes.txt",
+        mat_unspliced = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced.mtx",
+        barcodes_unspliced = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced.barcodes.txt",
+        genes_unspliced = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced.genes.txt"
+    output:
+        mat_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced.mtx",
+        barcodes_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced.barcodes.txt",
+        genes_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced.genes.txt"
+    wrapper: "file://../../steps/misc/unspliced_plus_spliced/"
+
+rule collapse_genes:
+    input:
+        mat = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced.mtx",
+        barcodes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced.barcodes.txt",
+        genes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced.genes.txt"
+    params:
+        id_to_genes = "/data/proj/GCB_FBP/references/geneid_genename.csv"
+    output:
+        mat_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.mtx",
+        barcodes_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.barcodes.txt",
+        genes_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.genes.txt"
+    wrapper: "file://../../steps/misc/collapse_genes/"
+
+rule qc_plots:
+    input:
+        mat = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.mtx",
+        genes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.genes.txt"
+    output:
+        vln = "results/{sample}/vln_plot.eps",
+        scatter = "results/{sample}/scatter_plot.eps",
+        knee = "results/{sample}/knee_plot.eps"
+    wrapper: "file://../../steps/visualization/qc/"
+
+rule empty_drops:
+    input:
+        mat = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.mtx",
+        barcodes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.barcodes.txt",
+        genes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed.genes.txt"
+    params:
+        limit = 100,
+        cutoff = 0.0001
+    output:
+        mat_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed_noempty.mtx",
+        barcodes_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed_noempty.barcodes.txt",
+        genes_output = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed_noempty.genes.txt"
+    wrapper: "file://../../steps/qc/empty_drops/"
+
+rule filter_sct:
+    input:
+        mat = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed_noempty.mtx",
+        barcodes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed_noempty.barcodes.txt",
+        genes = "intermediate/{sample}/kallisto/counts_unfiltered/unspliced_spliced_collapsed_noempty.genes.txt"
+    params:
+        min_features = 200,
+        max_features = 5000,
+        pct_mt = 5,
+        min_total = 500,
+        vars_regress = "NULL"
+    output: temp("intermediate/{sample}/seurat_obj.rds")
+    wrapper: "file://../../steps/normalization/"
+
+rule reduce_dim:
+    input: "intermediate/{sample}/seurat_obj.rds"
+    output: temp("intermediate/{sample}/seurat_obj_red.rds")
+    wrapper: "file://../../steps/dim_reduction/"
+
+rule pc_selection:
+    input: 
+        seurat = "intermediate/{sample}/seurat_obj_red.rds"
+    output:
+        jackstraw = "results/{sample}/jackstraw.eps",
+        elbow = "results/{sample}/elbow.eps"
+    wrapper: "file://../../steps/visualization/pc_selection/"
+
+rule cluster:
+    input: "intermediate/{sample}/seurat_obj_red.rds"
+    output: "results/{sample}/seurat_obj_red_cluster.rds"
+    wrapper: "file://../../steps/clustering/"
+
+rule umap:
+    input:
+        seurat = "results/{sample}/seurat_obj_red_cluster.rds"
+    output:
+        umap = "results/{sample}/umap.eps",
+        html = "results/{sample}/umap.html"
+    wrapper: "file://../../steps/visualization/umap/"
+
+rule findmarkers:
+    input:
+        seurat = "results/{sample}/seurat_obj_red_cluster.rds",
+        markers = "/data/proj/GCB_FBP/references/markers/MARKERS_gwen.csv"
+    output:
+        seurat_output = "results/{sample}/seurat_markers.txt",
+        known_markers = "results/{sample}/known_markers.txt"
+    wrapper: "file://../../steps/findmarkers/"
