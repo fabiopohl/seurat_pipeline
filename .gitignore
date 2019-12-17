@@ -19,3 +19,7 @@
 # Snakemake
 **.snakemake*
 
+# Plotly files
+**.js
+**.map
+**plotly*
