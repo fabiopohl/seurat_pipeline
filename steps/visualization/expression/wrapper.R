@@ -32,15 +32,17 @@ pal <- colorRampPalette(cols)
 
 metadata <- colnames(seurat[[]])
 umap_emb <- Embeddings(seurat, reduction = "umap")[, 1:3]
+wd <- getwd()
+html_output <- paste0(wd, "/", html_file)
 
 if (feat %in% metadata) {
     color_feat <- seurat[[feat]][[1]]
     p <- plot_ly(type = "scatter3d", x = umap_emb[, 1], y = umap_emb[, 2], z = umap_emb[, 3], mode = "markers", color = color_feat, colors = pal(20), size = 1)
-    htmlwidgets::saveWidget(as_widget(p), html_file)
+    htmlwidgets::saveWidget(as_widget(p), html_output)
 } else {
     color_counts <- as.vector(seurat[["RNA"]][feat, ])
     p <- plot_ly(type = "scatter3d", x = umap_emb[, 1], y = umap_emb[, 2], z = umap_emb[, 3], mode = "markers", color = color_counts, colors = pal(20), size = 1)
-    htmlwidgets::saveWidget(as_widget(p), html_file)
+    htmlwidgets::saveWidget(as_widget(p), html_output)
 }
 
 # Testing

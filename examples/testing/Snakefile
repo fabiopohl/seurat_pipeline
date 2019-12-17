@@ -14,7 +14,8 @@ rule all:
         known_markers = expand("results/{sample}/known_markers.txt", sample=samples),
         umap = expand("results/{sample}/umap.eps", sample=samples),
         jackstraw = expand("results/{sample}/jackstraw.eps", sample=samples),
-        vln = expand("results/{sample}/vln_plot.eps", sample=samples)
+        vln = expand("results/{sample}/vln_plot.eps", sample=samples),
+        feat_umap = expand("results/{sample}/feat_umap.eps", sample=samples)
 
 rule create_dir:
     # Create directories for analysis
@@ -128,6 +129,16 @@ rule umap:
         umap = "results/{sample}/umap.eps",
         html = "results/{sample}/umap.html"
     wrapper: "file://../../steps/visualization/umap/"
+
+rule feature_plot:
+    input:
+        seurat = "results/{sample}/seurat_obj_red_cluster.rds"
+    params:
+        feat = "PTPRZ1"
+    output:
+        umap = "results/{sample}/feat_umap.eps",
+        html = "results/{sample}/feat_3d_umap.html"
+    wrapper: "file://../../steps/visualization/expression/"
 
 rule findmarkers:
     input:
