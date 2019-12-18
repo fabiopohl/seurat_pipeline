@@ -20,6 +20,8 @@ genes <- read.table(file = genes_file, stringsAsFactors = FALSE)
 mat <- t(mat)
 colnames(mat) <- paste0("cell_", 1:ncol(mat))
 rownames(mat) <- genes[[1]]
+ntotal <- colSums(mat)
+mat <- mat[, which(ntotal > 100)]
 
 # Create seurat object
 seurat <- CreateSeuratObject(counts = mat, min.cells = 3, min.features = 300)
@@ -61,3 +63,5 @@ temp <- dev.off()
 #genes_file <- "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/visualization/qc/test/unspliced_spliced_collapsed.genes.txt"
 #mat_file <- "/data/proj/GCB_FBP/repos/seurat_pipeline/examples/testing/intermediate/example/kallisto/counts_unfiltered/unspliced_spliced_collapsed.mtx"
 #genes_file <- "/data/proj/GCB_FBP/repos/seurat_pipeline/examples/testing/intermediate/example/kallisto/counts_unfiltered/unspliced_spliced_collapsed.genes.txt"
+mat_file <- "/Users/fabiopohl/proj/czi_kb_lidx_191108/intermediate/kallisto/11723WAPool05-S__56_14205/counts_unfiltered/unspliced_spliced_collapsed.mtx"
+genes_file <- "/Users/fabiopohl/proj/czi_kb_lidx_191108/intermediate/kallisto/11723WAPool05-S__56_14205/counts_unfiltered/unspliced_spliced_collapsed.genes.txt"

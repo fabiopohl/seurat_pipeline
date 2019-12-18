@@ -38,7 +38,7 @@ seurat <- CreateSeuratObject(counts = mat_fil, min.cells = 3, min.features = 200
 seurat[["percent.mt"]] <- PercentageFeatureSet(seurat, pattern = "^MT-")
 
 # Filter low quality cells
-seurat <- subset(seurat, subset = nFeature_RNA > min_features & nFeature_RNA < max_features & percent.mt < pct_mt)
+seurat <- subset(seurat, subset = nFeature_RNA > min_features & nFeature_RNA < max_features & percent.mt < pct_mt, nCount_RNA > min_total)
 
 # Normalise and scale data
 if (vars_regress == "NULL") {
