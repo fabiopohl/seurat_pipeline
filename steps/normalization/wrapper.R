@@ -30,15 +30,15 @@ colnames(mat) <- barcodes[[1]]
 rownames(mat) <- genes[[1]]
 
 # Filter low total reads barcodes
-ntotal <- colSums(mat)
-mat_fil <- mat[, which(ntotal > min_total)]
+#ntotal <- colSums(mat)
+#mat_fil <- mat[, which(ntotal > min_total)]
 
 # Create Seurat Object
-seurat <- CreateSeuratObject(counts = mat_fil, min.cells = 3, min.features = 200)
+seurat <- CreateSeuratObject(counts = mat, min.cells = 10, min.features = 500)
 seurat[["percent.mt"]] <- PercentageFeatureSet(seurat, pattern = "^MT-")
 
 # Filter low quality cells
-seurat <- subset(seurat, subset = nFeature_RNA > min_features & nFeature_RNA < max_features & percent.mt < pct_mt, nCount_RNA > min_total)
+seurat <- subset(seurat, subset = nFeature_RNA > min_features & nFeature_RNA < max_features & percent.mt < pct_mt& nCount_RNA > min_total)
 
 # Normalise and scale data
 if (vars_regress == "NULL") {
