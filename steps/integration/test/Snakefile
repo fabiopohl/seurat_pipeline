@@ -1,0 +1,7 @@
+rule integrate_datasets:
+    input:
+        seurat = ["seurat_obj_red_cluster_1.rds", "seurat_obj_red_cluster_2.rds"]
+    params:
+        samples = ["sample1", "sample2"]
+    output: "seurat_obj_integrated.rds"
+    wrapper: "file://.."
