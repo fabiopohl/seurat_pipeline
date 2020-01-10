@@ -3,7 +3,8 @@
 #' @param seurat List of seurat objects
 #' @param samples List of samples to integrate
 #' @return Single seurat object with integrated data
-suppressMessages(library(Seurat, lib="/home/fabio/R/x86_64-redhat-linux-gnu-library/3.6"))
+suppressMessages(library(Seurat))
+#library(Seurat, lib = "/home/fabio/R/x86_64-redhat-linux-gnu-library/3.6/")
 options(future.globals.maxSize =  10485760000)
 
 # Get input
