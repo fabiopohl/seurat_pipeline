@@ -1,6 +1,7 @@
 #' Reduce dimensionality using Seurat
 #' 
 #' @param input Seurat R object
+#' @param ndim Number of dimensions to reduce
 #' @return Seurat object with PCA and UMAP slots
 suppressMessages(library(Seurat))
 
