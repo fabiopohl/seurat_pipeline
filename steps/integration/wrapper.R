@@ -5,7 +5,8 @@
 #' @return Single seurat object with integrated data
 suppressMessages(library(Seurat))
 #library(Seurat, lib = "/home/fabio/R/x86_64-redhat-linux-gnu-library/3.6/")
-options(future.globals.maxSize =  10485760000)
+mem_lim <- 100000*1024^2
+options(future.globals.maxSize =  mem_lim)
 
 # Get input
 seurat_files <- snakemake@input[["seurat"]]
