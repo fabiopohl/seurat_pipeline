@@ -13,7 +13,7 @@ ndims <- length(seurat@commands$RunUMAP.SCT.pca$dims)
 
 # Cluster cells
 seurat <- FindNeighbors(seurat, dim = 1:ndims)
-seurat <- FindClusters(seurat)
+seurat <- FindClusters(seurat, resolution = 2)
 
 # Get output
 output <- snakemake@output[[1]]

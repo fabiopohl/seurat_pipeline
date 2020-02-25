@@ -1,0 +1,111 @@
+---
+title: "Report"
+output: 
+    flexdashboard::flex_dashboard:
+        source_code: embed
+        vertical_layout: scroll
+---
+
+```{r}
+# Function to plot 3D UMAP with selected feature
+umap_feature <- function(feature) {
+
+    metadata <- colnames(seurat[[]])
+    if (feature %in% c(metadata, rownames(seurat))) {
+
+        color_counts <- as.vector(seurat[["RNA"]][feature, ])
+        p <- plot_ly(type = "scatter3d", x = umap_emb[, 1], y = umap_emb[, 2], z = umap_emb[, 3],
+                     mode = "markers", color = color_counts, colors = pal(20), size = 1)
+
+    } else {
+        par(mar = c(0,0,0,0))
+        p <- plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')  +
+            text(x = 0.5, y = 0.5, paste0("Feature not found: ", feat), cex = 1.6, col = "black")
+
+}
+    return(p)
+}
+```
+
+Column 
+-------------------------------------
+
+### Cluster
+
+```{r}
+umap_cluster <- plot_ly(type = "scatter3d", x = umap_emb[, 1], y = umap_emb[, 2], z = umap_emb[, 3], mode = "markers", color = seurat$seurat_clusters, text = seurat$seurat_clusters, size = 1)
+umap_cluster
+```
+
+### OPCs - PTPRZ1
+
+```{r}
+# PTPRZ1
+feat <- "PTPRZ1"
+umap_feature(feat)
+```
+
+### Oligos - Olig1
+
+```{r}
+feat <- "OLIG1"
+umap_feature(feat)
+```
+
+Column
+---------------------------------
+
+### Total UMI
+
+```{r}
+# Total UMI
+feat <- "nCount_RNA"
+cols <- brewer.pal(8, "OrRd")
+pal <- colorRampPalette(cols)
+color_feat <- seurat[[feat]][[1]]
+umap_ntotal <- plot_ly(type = "scatter3d", x = umap_emb[, 1], y = umap_emb[, 2], z = umap_emb[, 3], mode = "markers", color = color_feat, colors = pal(20), size = 1)
+umap_ntotal
+```
+
+### OPCs - PDGFRA
+
+```{r}
+feat <- "PDGFRA"
+umap_feature(feat)
+```
+
+### Oligos - Olig2
+
+```{r}
+feat <- "OLIG2"
+umap_feature(feat)
+```
+
+Column
+---------------------------------
+
+### Total features
+
+```{r}
+# Total features
+feat <- "nFeature_RNA"
+cols <- brewer.pal(8, "OrRd")
+pal <- colorRampPalette(cols)
+color_feat <- seurat[[feat]][[1]]
+umap_nfeats <- plot_ly(type = "scatter3d", x = umap_emb[, 1], y = umap_emb[, 2], z = umap_emb[, 3], mode = "markers", color = color_feat, colors = pal(20), size = 1)
+umap_nfeats
+```
+
+### OPCs - SOX2
+
+```{r}
+feat <- "SOX2"
+umap_feature(feat)
+```
+
+### Oligos - GLAST
+
+```{r}
+feat <- "GLAST"
+umap_feature(feat)
+```

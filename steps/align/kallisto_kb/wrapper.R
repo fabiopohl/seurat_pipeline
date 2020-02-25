@@ -22,7 +22,7 @@ params <- params[names(params) != ""]
 cmd <- paste(list("count", 
                   "-i", params[["reference"]],
                   "-w", params[["whitelist"]],
-                  "-m 40G -t 1",
+                  "-m 40G -t 56",
                   "-o", params[["output_folder"]],
                   "-g", params[["t2g"]],
                   "-x", params[["barcode_version"]],
@@ -30,7 +30,7 @@ cmd <- paste(list("count",
                   "-c2", params[["c2"]],
                   "--lamanno", allreads), collapse = " ")
 
-system2("/home/fabio/anaconda3/bin/kb", cmd)
+system2("/home/fabio/miniconda3/envs/snakemake/bin/kb", cmd)
 
 # Testing
 #r1 = "/data/proj/GCB_FBP/repos/seurat_pipeline/steps/align/kallisto_kb/test/sample_r1.fastq"
